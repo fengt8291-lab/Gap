@@ -1,0 +1,68 @@
+{
+  "dimensions": {
+    "criticism": {
+      "name": "批评型",
+      "description": "习惯性挑剔，总看到别人缺点",
+      "color": "#e74c3c",
+      "icon": "🔍"
+    },
+    "indifference": {
+      "name": "冷漠型",
+      "description": "只在乎自己，忽视对方感受",
+      "color": "#95a5a6",
+      "icon": "❄️"
+    },
+    "narcissism": {
+      "name": "自恋型",
+      "description": "聊天只说自己，不问对方",
+      "color": "#f39c12",
+      "icon": "🪞"
+    },
+    "forgetful": {
+      "name": "记不住型",
+      "description": "经常忘记别人名字和信息",
+      "color": "#9b59b6",
+      "icon": "🧠"
+    },
+    "defensive": {
+      "name": "防御型",
+      "description": "遇到分歧必须赢，无法接受不同意见",
+      "color": "#e67e22",
+      "icon": "🛡️"
+    },
+    "taking": {
+      "name": "索取型",
+      "description": "只关注自己想从对方那里得到什么",
+      "color": "#1abc9c",
+      "icon": "🤲"
+    }
+  },
+  "dimension_order": ["criticism", "indifference", "narcissism", "forgetful", "defensive", "taking"],
+  "questions": [
+    {"id": 1, "dimension": "criticism", "scores": [2, 0, 1, 2]},
+    {"id": 2, "dimension": "indifference", "scores": [0, 1, 2, 1]},
+    {"id": 3, "dimension": "narcissism", "scores": [0, 2, 0, -1]},
+    {"id": 4, "dimension": "forgetful", "scores": [0, 2, 2, -1]},
+    {"id": 5, "dimension": "criticism", "scores": [2, 0, 1, 0]},
+    {"id": 6, "dimension": "defensive", "scores": [-1, 2, 1, 0]},
+    {"id": 7, "dimension": "taking", "scores": [0, 2, 0, 2]},
+    {"id": 8, "dimension": "indifference", "scores": [0, 1, 2, 1]},
+    {"id": 9, "dimension": "narcissism", "scores": [0, 1, 2, -1]},
+    {"id": 10, "dimension": "criticism", "scores": [2, 0, 1, -1]},
+    {"id": 11, "dimension": "forgetful", "scores": [-1, 2, 1, 0]},
+    {"id": 12, "dimension": "defensive", "scores": [0, 2, 2, 1]},
+    {"id": 13, "dimension": "indifference", "scores": [0, 2, 1, 0]},
+    {"id": 14, "dimension": "narcissism", "scores": [0, 0, 2, 1]},
+    {"id": 15, "dimension": "taking", "scores": [0, 2, 0, 1]},
+    {"id": 16, "dimension": "criticism", "scores": [2, 0, 1, -1]},
+    {"id": 17, "dimension": "forgetful", "scores": [-1, 0, 2, 1]},
+    {"id": 18, "dimension": "defensive", "scores": [-1, 2, 1, 0]},
+    {"id": 19, "dimension": "indifference", "scores": [0, 1, 2, 2]},
+    {"id": 20, "dimension": "narcissism", "scores": [-1, 1, 1, 0]},
+    {"id": 21, "dimension": "taking", "scores": [0, 2, 1, -1]},
+    {"id": 22, "dimension": null, "scores": [0, 0, 0, 0]},
+    {"id": 23, "dimension": "forgetful", "scores": [-1, 2, 1, 0]},
+    {"id": 24, "dimension": "defensive", "scores": [-1, 2, 2, 1]},
+    {"id": 25, "dimension": "taking", "scores": [-1, 2, 0, 1]}
+  ]
+}
