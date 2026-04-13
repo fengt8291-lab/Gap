@@ -1,1107 +1,507 @@
 <!DOCTYPE html>
-
 <html lang="zh-CN">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>你的人性弱点诊断报告</title>
-
+    <title>人性弱点诊断报告</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-
     <style>
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-
             font-family: 'Noto Sans SC', -apple-system, sans-serif;
-
             background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
-
-            min-height: 100vh; color: #fff; overflow-x: hidden;
-
+            min-height: 100vh; color: #fff;
         }
-
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-
         
-
         .hero { text-align: center; padding: 40px 0; position: relative; }
-
         .hero::before {
-
             content: ''; position: absolute; top: 50%; left: 50%;
-
             transform: translate(-50%, -50%);
-
             width: 320px; height: 320px;
-
             background: radial-gradient(circle, rgba(233,69,96,0.12) 0%, transparent 70%);
-
         }
-
         .hero-icon { font-size: 60px; margin-bottom: 16px; }
-
         .hero-title {
-
             font-size: 26px; font-weight: 900; margin-bottom: 8px;
-
             background: linear-gradient(135deg, #e94560, #ff6b6b);
-
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-
         }
-
         .hero-subtitle { font-size: 13px; color: #8892b0; }
-
         
-
         /* Health Score */
-
         .health-card {
-
             background: rgba(46,204,113,0.08);
-
             border: 1px solid rgba(46,204,113,0.25);
-
             border-radius: 16px; padding: 20px; margin: 20px 0;
-
             text-align: center;
-
         }
-
         .health-label { font-size: 13px; color: #2ecc71; margin-bottom: 8px; }
-
         .health-score { font-size: 52px; font-weight: 900; color: #2ecc71; }
-
         .health-desc { font-size: 13px; color: #8892b0; margin-top: 8px; }
-
         
-
-        /* Radar Chart */
-
+        /* Radar */
         .radar-section { margin: 28px 0; text-align: center; }
-
         .radar-title { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: #ccd6f6; }
-
         .radar-container { width: 100%; max-width: 320px; margin: 0 auto; }
-
-        .radar-legend {
-
-            display: flex; flex-wrap: wrap; justify-content: center;
-
-            gap: 8px; margin-top: 16px;
-
-        }
-
-        .legend-item {
-
-            display: flex; align-items: center; gap: 5px;
-
-            font-size: 11px; padding: 3px 10px;
-
-            background: rgba(255,255,255,0.05); border-radius: 20px;
-
-        }
-
+        .radar-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 16px; }
+        .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; padding: 3px 10px; background: rgba(255,255,255,0.05); border-radius: 20px; }
         .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
-
         
-
-        /* Main Weakness Card */
-
+        /* Main Weakness */
         .weakness-card {
-
             background: linear-gradient(145deg, rgba(233,69,96,0.12), rgba(233,69,96,0.04));
-
             border: 1px solid rgba(233,69,96,0.3);
-
             border-radius: 20px; padding: 28px; margin: 20px 0;
-
             position: relative; overflow: hidden;
-
         }
-
         .weakness-card::before {
-
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-
             background: linear-gradient(90deg, #e94560, #ff6b6b);
-
         }
-
         .weakness-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
-
         .weakness-icon { font-size: 44px; }
-
         .weakness-info { flex: 1; }
-
         .weakness-name { font-size: 22px; font-weight: 700; color: #e94560; }
-
         .weakness-desc { font-size: 13px; color: #8892b0; margin-top: 4px; }
-
-        .weakness-score-tag {
-
-            background: rgba(233,69,96,0.25); padding: 8px 14px;
-
-            border-radius: 20px; font-size: 18px; font-weight: 700; color: #ff8a80;
-
-        }
-
+        .weakness-score-tag { background: rgba(233,69,96,0.25); padding: 8px 14px; border-radius: 20px; font-size: 18px; font-weight: 700; color: #ff8a80; }
         
-
-        /* Carnegie Quote */
-
-        .quote-box {
-
-            background: rgba(255,255,255,0.03);
-
-            border-left: 3px solid #e94560; padding: 16px; margin: 16px 0;
-
-            border-radius: 0 12px 12px 0;
-
-        }
-
+        /* Quote */
+        .quote-box { background: rgba(255,255,255,0.03); border-left: 3px solid #e94560; padding: 16px; margin: 16px 0; border-radius: 0 12px 12px 0; }
         .quote-text { font-size: 14px; line-height: 1.8; color: #ccd6f6; font-style: italic; }
-
         .quote-author { font-size: 11px; color: #8892b0; margin-top: 8px; text-align: right; }
-
         
-
-        /* Analysis Card */
-
-        .analysis-card {
-
-            background: rgba(255,255,255,0.03);
-
-            border-radius: 16px; padding: 22px; margin: 16px 0;
-
-        }
-
+        /* Analysis Cards */
+        .analysis-card { background: rgba(255,255,255,0.03); border-radius: 16px; padding: 22px; margin: 16px 0; }
         .analysis-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-
         .analysis-icon { font-size: 28px; }
-
         .analysis-title { font-size: 16px; font-weight: 700; }
-
-        .analysis-text {
-
-            font-size: 14px; line-height: 2; color: #a8b2d1;
-
-            text-indent: 2em;
-
-        }
-
+        .analysis-text { font-size: 14px; line-height: 2; color: #a8b2d1; text-indent: 2em; }
         
-
         /* Carnegie Block */
-
-        .carnegie-block {
-
-            background: rgba(44,62,80,0.3);
-
-            border-radius: 10px; padding: 16px; margin: 12px 0;
-
-        }
-
+        .carnegie-block { background: rgba(44,62,80,0.3); border-radius: 10px; padding: 16px; margin: 12px 0; }
         .carnegie-label { font-size: 11px; color: #e94560; margin-bottom: 8px; font-weight: 600; }
-
         .carnegie-text { font-size: 13px; line-height: 1.85; color: #b8c4d8; font-style: italic; }
-
         
-
         /* Action Tips */
-
-        .action-card {
-
-            background: rgba(46,204,113,0.08);
-
-            border: 1px solid rgba(46,204,113,0.2);
-
-            border-radius: 12px; padding: 14px; margin: 10px 0;
-
-        }
-
-        .action-num {
-
-            display: inline-block; width: 22px; height: 22px;
-
-            background: #2ecc71; border-radius: 50%;
-
-            text-align: center; line-height: 22px;
-
-            font-size: 11px; font-weight: 700; margin-right: 10px;
-
-        }
-
+        .action-card { background: rgba(46,204,113,0.08); border: 1px solid rgba(46,204,113,0.2); border-radius: 12px; padding: 14px; margin: 10px 0; }
+        .action-num { display: inline-block; width: 22px; height: 22px; background: #2ecc71; border-radius: 50%; text-align: center; line-height: 22px; font-size: 11px; font-weight: 700; margin-right: 10px; }
         .action-text { font-size: 14px; color: #ccd6f6; line-height: 1.7; }
-
         
-
         /* Secondary Weakness */
-
-        .secondary-card {
-
-            display: flex; align-items: center; gap: 14px;
-
-            background: rgba(255,255,255,0.03);
-
-            border-radius: 12px; padding: 14px; margin: 10px 0;
-
-        }
-
+        .secondary-card { display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.03); border-radius: 12px; padding: 14px; margin: 10px 0; }
         .secondary-icon { font-size: 28px; }
-
         .secondary-info { flex: 1; }
-
         .secondary-name { font-size: 15px; font-weight: 600; }
-
         .secondary-desc { font-size: 12px; color: #8892b0; margin-top: 3px; }
-
         .secondary-score { font-size: 18px; font-weight: 700; color: #f39c12; }
-
         
-
         /* Safe Zone */
-
-        .safe-card {
-
-            display: flex; align-items: center; gap: 10px;
-
-            background: rgba(46,204,113,0.06);
-
-            border: 1px solid rgba(46,204,113,0.15);
-
-            border-radius: 10px; padding: 10px 14px; margin: 8px 0;
-
-        }
-
+        .safe-card { display: flex; align-items: center; gap: 10px; background: rgba(46,204,113,0.06); border: 1px solid rgba(46,204,113,0.15); border-radius: 10px; padding: 10px 14px; margin: 8px 0; }
         .safe-icon { font-size: 16px; }
-
         .safe-name { font-size: 13px; color: #2ecc71; font-weight: 600; }
-
         
-
         /* Book */
-
-        .book-card {
-
-            display: flex; gap: 14px; align-items: flex-start;
-
-            background: rgba(255,255,255,0.03); border-radius: 14px; padding: 16px; margin: 16px 0;
-
-        }
-
-        .book-cover {
-
-            width: 50px; height: 70px;
-
-            background: linear-gradient(135deg, #e94560, #c0392b);
-
-            border-radius: 6px; display: flex; align-items: center;
-
-            justify-content: center; font-size: 20px; flex-shrink: 0;
-
-        }
-
+        .book-card { display: flex; gap: 14px; align-items: flex-start; background: rgba(255,255,255,0.03); border-radius: 14px; padding: 16px; margin: 16px 0; }
+        .book-cover { width: 50px; height: 70px; background: linear-gradient(135deg, #e94560, #c0392b); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
         .book-title { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
-
         .book-desc { font-size: 12px; color: #8892b0; line-height: 1.6; }
-
         
-
-        /* Final */
-
-        .final-quote {
-
-            text-align: center; padding: 32px 20px;
-
-            font-size: 17px; font-weight: 500; color: #ccd6f6; line-height: 1.9;
-
-        }
-
+        .final-quote { text-align: center; padding: 32px 20px; font-size: 17px; font-weight: 500; color: #ccd6f6; line-height: 1.9; }
         
-
         /* Share */
-
         .share-section { text-align: center; padding: 24px 0; }
-
         .share-title { font-size: 14px; color: #8892b0; margin-bottom: 14px; }
-
-        .share-btn {
-
-            display: inline-block;
-
-            background: linear-gradient(135deg, #e94560, #c0392b);
-
-            color: #fff; padding: 14px 36px; border-radius: 30px;
-
-            font-size: 15px; font-weight: 600; cursor: pointer; border: none;
-
-        }
-
+        .share-btn { display: inline-block; background: linear-gradient(135deg, #e94560, #c0392b); color: #fff; padding: 14px 36px; border-radius: 30px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; }
         .share-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(233,69,96,0.3); }
-
     </style>
-
 </head>
-
 <body>
-
     <div class="container">
-
         <div class="hero">
-
             <div class="hero-icon">🔍</div>
-
             <h1 class="hero-title">你的人性弱点诊断报告</h1>
-
             <p class="hero-subtitle">基于卡内基《人性的弱点》| 25道场景测试</p>
-
         </div>
-
         
-
         <div class="health-card">
-
             <div class="health-label">🎯 人际健康指数</div>
-
             <div class="health-score" id="health-score">--</div>
-
             <div class="health-desc" id="health-desc">加载中...</div>
-
         </div>
-
         
-
         <div class="radar-section">
-
             <div class="radar-title">📊 六维雷达图</div>
-
             <div class="radar-container">
-
                 <svg class="radar-chart" viewBox="0 0 300 300" id="radar-svg"></svg>
-
             </div>
-
             <div class="radar-legend" id="radar-legend"></div>
-
         </div>
-
         
-
         <div class="weakness-card">
-
             <div class="weakness-header">
-
                 <span class="weakness-icon" id="main-icon">🔍</span>
-
                 <div class="weakness-info">
-
                     <div class="weakness-name" id="main-name">--</div>
-
                     <div class="weakness-desc" id="main-desc">--</div>
-
                 </div>
-
                 <div class="weakness-score-tag" id="main-score">--</div>
-
             </div>
-
             <div class="quote-box">
-
                 <div class="quote-text" id="carnegie-quote">--</div>
-
                 <div class="quote-author">— 戴尔·卡耐基《人性的弱点》</div>
-
             </div>
-
         </div>
-
         
-
         <div class="analysis-card">
-
             <div class="analysis-header">
-
                 <span class="analysis-icon">🧠</span>
-
                 <span class="analysis-title">为什么你会形成这个弱点</span>
-
             </div>
-
             <div class="analysis-text" id="why-section">加载中...</div>
-
             <div class="carnegie-block">
-
                 <div class="carnegie-label">📖 卡内基原文明释</div>
-
-                <div class="carnegie-text" id="carnegie-why-block">一个人的性格，往往形成于童年时期的家庭环境。</div>
-
+                <div class="carnegie-text" id="carnegie-why-block"></div>
             </div>
-
         </div>
-
         
-
         <div class="analysis-card">
-
             <div class="analysis-header">
-
                 <span class="analysis-icon">💡</span>
-
                 <span class="analysis-title">这个弱点如何悄悄毁掉你的人际关系</span>
-
             </div>
-
             <div class="analysis-text" id="impact-section">加载中...</div>
-
             <div class="carnegie-block">
-
                 <div class="carnegie-label">📖 卡内基原文明释</div>
-
-                <div class="carnegie-text" id="carnegie-impact-block">当你对伴侣说"你怎么总是这样"的时候，你以为你在帮助对方改进。</div>
-
+                <div class="carnegie-text" id="carnegie-impact-block"></div>
             </div>
-
         </div>
-
         
-
         <div class="analysis-card">
-
             <div class="analysis-header">
-
                 <span class="analysis-icon">✨</span>
-
                 <span class="analysis-title">卡耐基的改变建议</span>
-
             </div>
-
             <div id="action-tips"></div>
-
         </div>
-
         
-
         <div class="analysis-card" id="secondary-section" style="display:none;">
-
             <div class="analysis-header">
-
                 <span class="analysis-icon">🔔</span>
-
                 <span class="analysis-title">你的次要弱点</span>
-
             </div>
-
             <div id="secondary-weakness"></div>
-
         </div>
-
         
-
         <div class="analysis-card" id="safe-section">
-
             <div class="analysis-header">
-
                 <span class="analysis-icon">✅</span>
-
                 <span class="analysis-title">你的安全区</span>
-
             </div>
-
             <div id="safe-weakness"></div>
-
         </div>
-
         
-
         <div class="analysis-card">
-
             <div class="analysis-header">
-
                 <span class="analysis-icon">📚</span>
-
                 <span class="analysis-title">必读经典</span>
-
             </div>
-
             <div class="book-card">
-
                 <div class="book-cover">📖</div>
-
                 <div>
-
                     <div class="book-title">《人性的弱点》</div>
-
                     <div class="book-desc">戴尔·卡耐基 | 全球销量超9000万册的人际交往圣经。<br>"这本书不会让你变得完美，但会让你更理解人性。"</div>
-
                 </div>
-
             </div>
-
         </div>
-
         
-
         <div class="final-quote" id="final-quote">
-
             "认识自己，才能改变自己。<br>改变自己，才能改变你与世界的距离。"
-
         </div>
-
         
-
         <div class="share-section">
-
             <div class="share-title">戳中你的痛点了吗？转发给朋友看看</div>
-
             <button class="share-btn" id="share-btn">📤 复制分享文案</button>
-
         </div>
-
     </div>
-
     
-
     <script>
-
     // ====== DIMENSION DATA ======
-
     const dimData = {
-
         criticism: {
-
-            name: '批评型', icon: '🔍', color: '#e74c3c',
-
-            desc: '习惯性挑剔，总看到别人缺点',
-
-            why: '你可能在成长过程中被过度批评，或者习惯了用挑剔来表达关心。在你的认知里，"指出错误=帮助别人"，却没有意识到这种方式正在推开你身边的人。批评型的人往往对自己要求严格，对别人也格外严苛。你内心深处可能认为：如果我不说，他们就不会进步。',
-
-            impact: '当你在会议中当众指出同事的错误，你以为自己在帮助团队改进。但对方的第一反应是防御和丢脸，而不是反思这个错误。当你对伴侣说"你怎么总是这样"，你赢得了一场争论，却输掉了一份亲密。批评是最快摧毁信任的方式，却也是最难察觉的。',
-
-            carnegieWhy: '"批评就像一种危险的武器，它在伤害别人的同时，也会摧毁人与人之间的信任。"——卡耐基',
-
-            carnegieImpact: '"所以，当你想批评别人的时候，先停下来想一下：我的批评能达到我想要的效果吗？"——卡耐基在书中写道，99%的人在面对批评时的第一反应都是防御，而非改变。',
-
-            actions: [
-
+            name:'批评型', icon:'🔍', color:'#e74c3c',
+            desc:'习惯性挑剔，总看到别人缺点',
+            why:'你可能在成长过程中被过度批评，或者习惯了用挑剔来表达关心。在你的认知里，"指出错误=帮助别人"，却没有意识到这种方式正在推开你身边的人。批评型的人往往对自己要求严格，对别人也格外严苛。你内心深处可能认为：如果我不说，他们就不会进步。',
+            impact:'当你在会议中当众指出同事的错误，你以为自己在帮助团队改进。但对方的第一反应是防御和丢脸，而不是反思这个错误。当你对伴侣说"你怎么总是这样"，你赢得了一场争论，却输掉了一份亲密。批评是最快摧毁信任的方式，却也是最难察觉的。',
+            carnegieWhy:'"批评就像一种危险的武器，它在伤害别人的同时，也会摧毁人与人之间的信任。"——卡耐基',
+            carnegieImpact:'"所以，当你想批评别人的时候，先停下来想一下：我的批评能达到我想要的效果吗？"——卡耐基写道，99%的人在面对批评时的第一反应都是防御，而非改变。',
+            actions:[
                 '连续7天，每天找出一个人的优点并真诚地说出来',
-
                 '把"你这里不对"改成"如果这样会不会更好？"，观察对方的反应',
-
                 '每天睡前写下3件今天你欣赏的人的具体事例，强化关注优点的习惯'
-
             ],
-
-            quote: '"99%的情况下，不管犯多严重的错误，人们都不会责备自己。批评带来的并不是改变，而是怨恨。"'
-
+            quote:'"99%的情况下，不管犯多严重的错误，人们都不会责备自己。批评带来的并不是改变，而是怨恨。"'
         },
-
         indifference: {
-
-            name: '冷漠型', icon: '❄️', color: '#95a5a6',
-
-            desc: '只在乎自己，忽视对方感受',
-
-            why: '你可能早年情感需求未被满足，养成了"不指望任何人"的自我保护模式。或者你太忙于自己的事务，以至于没有精力去关注他人的需求。冷漠不是无情，而是长期忽视后形成的习惯——你甚至没有意识到自己在忽视。',
-
-            impact: '人是情感动物，被忽视比被批评更让人心寒。朋友倾诉了半小时，你只顾着刷手机；同事需要帮忙，你借口"我很忙"。这些小事累积起来，身边的人渐渐不再找你——不是因为讨厌你，而是因为感受不到你的在乎。',
-
-            carnegieWhy: '"如果你希望别人对你感兴趣，你先要对别人感兴趣。"——冷漠的人总是等待别人来关心自己，却从不主动付出。',
-
-            carnegieImpact: '"最善于倾听的人，身边总是聚满了人，因为他们让人觉得被重视、被理解。"——卡耐基发现，那些最受欢迎的人，不是因为他们说了什么，而是因为他们善于让别人说话。',
-
-            actions: [
-
+            name:'冷漠型', icon:'❄️', color:'#95a5a6',
+            desc:'只在乎自己，忽视对方感受',
+            why:'你可能早年情感需求未被满足，养成了"不指望任何人"的自我保护模式。或者你太忙于自己的事务，以至于没有精力去关注他人的需求。冷漠不是无情，而是长期忽视后形成的习惯——你甚至没有意识到自己在忽视。',
+            impact:'人是情感动物，被忽视比被批评更让人心寒。朋友倾诉了半小时，你只顾着刷手机；同事需要帮忙，你借口"我很忙"。这些小事累积起来，身边的人渐渐不再找你——不是因为讨厌你，而是因为感受不到你的在乎。',
+            carnegieWhy:'"如果你希望别人对你感兴趣，你先要对别人感兴趣。"——冷漠的人总是等待别人来关心自己，却从不主动付出。',
+            carnegieImpact:'"最善于倾听的人，身边总是聚满了人，因为他们让人觉得被重视、被理解。"——卡耐基发现，那些最受欢迎的人，不是因为他们说了什么，而是因为他们善于让别人说话。',
+            actions:[
                 '每天主动问一个人"你今天怎么样"，并完整听完对方的回答',
-
                 '朋友分享时，先复述对方的话再回应："那确实挺..."，让对方知道你在听',
-
                 '每周给一个久未联系的朋友发一条消息，只说"想到你了"'
-
             ],
-
-            quote: '"人们只在乎自己的问题——你也一样。所以，想让别人喜欢你，先让他们觉得被关注。"'
-
+            quote:'"人们只在乎自己的问题——你也一样。所以，想让别人喜欢你，先让他们觉得被关注。"'
         },
-
         narcissism: {
-
-            name: '自恋型', icon: '🪞', color: '#f39c12',
-
-            desc: '聊天只说自己，不问对方',
-
-            why: '你可能内心深处缺乏安全感，需要通过别人的关注来确认自己的价值。当你在讲述自己的故事时，你能感到被重视；而当别人说话时，你感到被忽视。这个模式让你陷入怪圈：越关注自己，越难建立真正的连接。',
-
-            impact: '对话是双向的。当一段对话中只有一个人在说话，另一个人只是在等待"终于轮到我说了"，关系就已经失衡。朋友们开始害怕和你聊天，因为每次都变成你的独角戏。你发现自己越来越孤独，却不知道为什么。',
-
-            carnegieWhy: '"一个让人喜欢的人，不是那些滔滔不绝的人，而是善于让别人说话的人。"——卡耐基',
-
-            carnegieImpact: '"即使是最挑剔的人，也会在一个耐心倾听者面前软化。"——那些总是抢着说话的人，失去的往往比得到的多。',
-
-            actions: [
-
+            name:'自恋型', icon:'🪞', color:'#f39c12',
+            desc:'聊天只说自己，不问对方',
+            why:'你可能内心深处缺乏安全感，需要通过别人的关注来确认自己的价值。当你在讲述自己的故事时，你能感到被重视；而当别人说话时，你感到被忽视。这个模式让你陷入怪圈：越关注自己，越难建立真正的连接。',
+            impact:'对话是双向的。当一段对话中只有一个人在说话，另一个人只是在等待"终于轮到我说了"，关系就已经失衡。朋友们开始害怕和你聊天，因为每次都变成你的独角戏。你发现自己越来越孤独，却不知道为什么。',
+            carnegieWhy:'"一个让人喜欢的人，不是那些滔滔不绝的人，而是善于让别人说话的人。"——卡耐基',
+            carnegieImpact:'"即使是最挑剔的人，也会在一个耐心倾听者面前软化。"——那些总是抢着说话的人，失去的往往比得到的多。',
+            actions:[
                 '每次说话前先问自己："对方真的想听我说这些吗？"',
-
                 '练习"重复+延伸"：先复述对方的话，再问一个相关问题',
-
                 '每周刻意创造一次只问问题、让对方说30分钟的机会'
-
             ],
-
-            quote: '"想交朋友，就要耐心地听别人说话。让他们谈论自己——大多数人会因此喜欢你。"'
-
+            quote:'"想交朋友，就要耐心地听别人说话。让他们谈论自己——大多数人会因此喜欢你。"'
         },
-
         forgetful: {
-
-            name: '记不住型', icon: '🧠', color: '#9b59b6',
-
-            desc: '经常忘记别人名字和信息',
-
-            why: '你可能习惯活在自己的世界里，对他人的细节不够上心。在你的认知里，记住别人的名字是"小事"，你有更重要的事要操心。但正是这些"小事"，构成了人与人之间最基本的尊重。',
-
-            impact: '名字是语言中最甜蜜的声音。别人用名字叫你，是为了让你们之间多一点熟悉感；而当你叫不出别人的名字时，传递的信号是"你对我不重要"。这不是故意的，但伤害是真实的。记住别人，是一种尊重的表达。',
-
-            carnegieWhy: '"记住别人的名字，并使用它——这是最简单、最有效的让人喜欢你的方法。"——卡耐基',
-
-            carnegieImpact: '"一种最简单、最显著而又最重要的取得他人好感的方式，就是牢牢记住他的名字。"——那些总是记不住别人名字的人，往往在人际交往中处于劣势。',
-
-            actions: [
-
+            name:'记不住型', icon:'🧠', color:'#9b59b6',
+            desc:'经常忘记别人名字和信息',
+            why:'你可能习惯活在自己的世界里，对他人的细节不够上心。在你的认知里，记住别人的名字是"小事"，你有更重要的事要操心。但正是这些"小事"，构成了人与人之间最基本的尊重。',
+            impact:'名字是语言中最甜蜜的声音。别人用名字叫你，是为了让你们之间多一点熟悉感；而当你叫不出别人的名字时，传递的信号是"你对我不重要"。这不是故意的，但伤害是真实的。记住别人，是一种尊重的表达。',
+            carnegieWhy:'"记住别人的名字，并使用它——这是最简单、最有效的让人喜欢你的方法。"——卡耐基',
+            carnegieImpact:'"一种最简单、最显著而又最重要的取得他人好感的方式，就是牢牢记住他的名字。"——那些总是记不住别人名字的人，往往在人际交往中处于劣势。',
+            actions:[
                 '加上微信立刻改备注，写上职业+特点+在哪里认识',
-
                 '每次见面记住一个细节，下次见面时主动提起',
-
                 '把重要联系人的生日设日历提醒，提前准备问候'
-
             ],
-
-            quote: '"名字是心灵游戏中最重要的一部分。一个人的名字对他来说，是所有语言中最甜蜜、最重要的声音。"'
-
+            quote:'"名字是心灵游戏中最重要的一部分。一个人的名字对他来说，是所有语言中最甜蜜、最重要的声音。"'
         },
-
         defensive: {
-
-            name: '防御型', icon: '🛡️', color: '#e67e22',
-
-            desc: '遇到分歧必须赢，无法接受不同意见',
-
-            why: '你可能把"认错"等于"承认自己不好"，把"被反驳"等于"被攻击"。在你认知里，认输意味着软弱，意味着会被欺负。但实际上，在争论中"赢"了的人，往往失去了更多——信任、关系、尊重。',
-
-            impact: '没有人喜欢和一个"永远正确"的人在一起。你的防御姿态让对话变成了战争，让朋友变成了对手。你的伴侣发现，每次有分歧都要大吵一架才能解决；你的同事发现，跟你讨论问题时永远不能有不同意见。渐渐地，他们开始躲着你。',
-
-            carnegieWhy: '"在争论中唯一的方法就是避免争论。"——卡耐基',
-
-            carnegieImpact: '"当你 说"你错了"时，你们的对话就结束了；当你说"你有道理，但我的想法是..."时，对话才能继续。"——卡耐基建议：永远不要说"你错了"，而是说"我的想法是..."',
-
-            actions: [
-
+            name:'防御型', icon:'🛡️', color:'#e67e22',
+            desc:'遇到分歧必须赢，无法接受不同意见',
+            why:'你可能把"认错"等于"承认自己不好"，把"被反驳"等于"被攻击"。在你认知里，认输意味着软弱，意味着会被欺负。但实际上，在争论中"赢"了的人，往往失去了更多——信任、关系、尊重。',
+            impact:'没有人喜欢和一个"永远正确"的人在一起。你的防御姿态让对话变成了战争，让朋友变成了对手。你的伴侣发现，每次有分歧都要大吵一架才能解决；你的同事发现，跟你讨论问题时永远不能有不同意见。渐渐地，他们开始躲着你。',
+            carnegieWhy:'"在争论中唯一的方法就是避免争论。"——卡耐基',
+            carnegieImpact:'"当你 说"你错了"时，你们的对话就结束了；当你说"你有道理，但我的想法是..."时，对话才能继续。"——卡耐基建议：永远不要说"你错了"，而是说"我的想法是..."',
+            actions:[
                 '听到不同意见先说"你说得有道理"再表达自己，观察气氛的变化',
-
                 '每天允许自己说一次"你说得对"',
-
                 '遇到分歧时先问自己："我要的是对，还是关系？"'
-
             ],
-
-            quote: '"如果你错了，迅速坦率地承认。这比为自己辩解更有力量。认错不会让你丢脸，反而会赢得尊重。"'
-
+            quote:'"如果你错了，迅速坦率地承认。这比为自己辩解更有力量。认错不会让你丢脸，反而会赢得尊重。"'
         },
-
         taking: {
-
-            name: '索取型', icon: '🤲', color: '#1abc9c',
-
-            desc: '只关注自己想从对方那里得到什么',
-
-            why: '你可能把关系当成交易，觉得"我对别人好"就要立刻得到回报。或者你从小被教育要"精明"，所以做每件事都要考虑"值不值"。这种模式让你很难建立真正的友谊——真正的友谊是无条件的。',
-
-            impact: '关系不是交易。当你帮人的时候想着回报，那不是帮助，是投资。投资有风险，会失望；真正的帮助，是不期待回报的。身边的人会感受到你的"目的性"，从而保持距离——不是因为他们不好，而是因为你给的"好"里藏着条件。',
-
-            carnegieWhy: '"你想让别人做什么，你就先给别人做什么。"——卡耐基',
-
-            carnegieImpact: '"不要计较得失，真正的给予者，收获最多。"——当你放下"我能得到什么"的计算时，你反而会发现周围的人都愿意帮你。',
-
-            actions: [
-
+            name:'索取型', icon:'🤲', color:'#1abc9c',
+            desc:'只关注自己想从对方那里得到什么',
+            why:'你可能把关系当成交易，觉得"我对别人好"就要立刻得到回报。或者你从小被教育要"精明"，所以做每件事都要考虑"值不值"。这种模式让你很难建立真正的友谊——真正的友谊是无条件的。',
+            impact:'关系不是交易。当你帮人的时候想着回报，那不是帮助，是投资。投资有风险，会失望；真正的帮助，是不期待回报的。身边的人会感受到你的"目的性"，从而保持距离——不是因为他们不好，而是因为你给的"好"里藏着条件。',
+            carnegieWhy:'"你想让别人做什么，你就先给别人做什么。"——卡耐基',
+            carnegieImpact:'"不要计较得失，真正的给予者，收获最多。"——当你放下"我能得到什么"的计算时，你反而会发现周围的人都愿意帮你。',
+            actions:[
                 '每周做一件不求回报的小事，帮完就忘',
-
                 '帮人后不要提，也不要期待感谢',
-
                 '先付出再想回报，把"我能帮什么"放在"我能得什么"之前'
-
             ],
-
-            quote: '"你今天帮了别人，不要提；如果对方知道了，他们会感激你一辈子。"'
-
+            quote:'"你今天帮了别人，不要提；如果对方知道了，他们会感激你一辈子。"'
         }
-
     };
-
     
-
-    // MC question: dimMap for Q1-25
-
+    // ====== SCORING ======
+    // MC: positions 0-4 → scores -1,0,0,1,2
+    const MC = [-1, 0, 0, 1, 2];
+    // Scale (Q20-Q25): positions 0-6 → scores 0,1,2,3,4,5,6 (linear)
+    // Scale = 0 points at "完全不符合", 6 points at "完全符合"
+    
+    // dimMap: question number → dimension
     const dimMap = {
-
         1:'criticism', 2:'defensive', 3:'indifference', 4:'taking',
-
         5:'criticism', 6:'defensive', 7:'indifference', 8:'taking',
-
         9:'criticism', 10:'indifference', 11:'indifference', 12:'defensive',
-
         13:'criticism', 14:'narcissism', 15:'narcissism', 16:'forgetful',
-
         17:'forgetful', 18:'taking', 19:'narcissism',
-
-        20:'criticism', 21:'indifference', 22:'narcissism', 23:'forgetful',
-
-        24:'defensive', 25:'taking'
-
+        20:'criticism', 21:'indifference', 22:'narcissism',
+        23:'forgetful', 24:'defensive', 25:'taking'
     };
-
     
-
-    // Scale question scoring: center=highest (position 3=4, edges=0)
-
-    // scaleScores[position] = points for that position (0-6)
-
-    const scaleScores = [0, 1, 2, 3, 2, 1, 0];
-
+    // Max score per dimension (used for radar normalization)
+    // MC part: max is when all answers are D(=+1) or E(=+2)
+    // But realistically, most are 0, so let's use the theoretical max
+    // Max = (#MC_questions × 2) + 6 (scale max)
+    const dimMax = {
+        criticism:    (4 * 2) + 6,  // 14
+        indifference: (4 * 2) + 6,  // 14
+        defensive:    (3 * 2) + 6,  // 12
+        taking:       (3 * 2) + 6,  // 12
+        narcissism:   (3 * 2) + 6,  // 12
+        forgetful:    (2 * 2) + 6   // 10
+    };
+    const DIM_ORDER = ['criticism','indifference','narcissism','forgetful','defensive','taking'];
+    const DIM_LABELS = {criticism:'批评型',indifference:'冷漠型',narcissism:'自恋型',forgetful:'记不住型',defensive:'防御型',taking:'索取型'};
+    const DIM_COLORS = {criticism:'#e74c3c',indifference:'#95a5a6',narcissism:'#f39c12',forgetful:'#9b59b6',defensive:'#e67e22',taking:'#1abc9c'};
+    const TOTAL_MAX = Object.values(dimMax).reduce((a,b) => a+b, 0); // 70
     
-
-    // MC scoring: -1, 0, 0, 1, 2
-
-    const mcScores = [-1, 0, 0, 1, 2];
-
-    
-
     function getScores() {
-
         const params = new URLSearchParams(window.location.search);
-
         const result = {};
-
         for (let i = 1; i <= 25; i++) {
-
-            const val = params.get('q' + i);
-
-            result[i] = val !== null ? parseInt(val) : 0;
-
+            const v = params.get('q' + i);
+            result[i] = v !== null ? parseInt(v) : 0;
         }
-
         return result;
-
     }
-
     
-
     function calculateDimensions(scores) {
-
-        const dims = {
-
-            criticism: 0, indifference: 0, narcissism: 0,
-
-            forgetful: 0, defensive: 0, taking: 0
-
-        };
-
-        
-
+        const dims = {criticism:0, indifference:0, narcissism:0, forgetful:0, defensive:0, taking:0};
         for (let q = 1; q <= 25; q++) {
-
             const dim = dimMap[q];
-
             if (!dim) continue;
-
-            
-
             if (q >= 20) {
-
-                // Scale question: position 0-6 maps to score
-
+                // Scale: position → score directly (0-6)
                 dims[dim] += scores[q];
-
             } else {
-
-                // MC question
-
-                dims[dim] += scores[q];
-
+                // MC: position → score
+                dims[dim] += MC[scores[q]];
             }
-
         }
-
+        // No negatives, floor at 0
+        for (const d in dims) dims[d] = Math.max(0, dims[d]);
         return dims;
-
     }
-
     
-
     function drawRadar(dims) {
-
         const svg = document.getElementById('radar-svg');
-
         const cx = 150, cy = 150, r = 95;
-
-        const order = ['criticism', 'indifference', 'narcissism', 'forgetful', 'defensive', 'taking'];
-
-        const labels = ['批评型', '冷漠型', '自恋型', '记不住型', '防御型', '索取型'];
-
-        const colors = ['#e74c3c', '#95a5a6', '#f39c12', '#9b59b6', '#e67e22', '#1abc9c'];
-
-        
-
         let html = '';
-
         
-
-        // Background circles
-
-        for (let i = 1; i <= 4; i++) {
-
-            const cr = r * i / 4;
-
-            html += `<circle cx="${cx}" cy="${cy}" r="${cr}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
-
+        // Background rings + axes
+        for (let ring = 1; ring <= 4; ring++) {
+            const cr = r * ring / 4;
+            html += '<circle cx="'+cx+'" cy="'+cy+'" r="'+cr+'" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>';
         }
-
-        
-
-        // Axes
-
         for (let i = 0; i < 6; i++) {
-
             const angle = (i * 60 - 90) * Math.PI / 180;
-
-            const x2 = cx + r * Math.cos(angle);
-
-            const y2 = cy + r * Math.sin(angle);
-
-            html += `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
-
-            
-
-            const lx = cx + (r + 18) * Math.cos(angle);
-
-            const ly = cy + (r + 18) * Math.sin(angle);
-
-            html += `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" fill="${colors[i]}" font-size="10" font-weight="500">${labels[i]}</text>`;
-
+            const x2 = cx + r * Math.cos(angle), y2 = cy + r * Math.sin(angle);
+            html += '<line x1="'+cx+'" y1="'+cy+'" x2="'+x2+'" y2="'+y2+'" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>';
+            const lx = cx + (r + 18) * Math.cos(angle), ly = cy + (r + 18) * Math.sin(angle);
+            html += '<text x="'+lx+'" y="'+ly+'" text-anchor="middle" dominant-baseline="middle" fill="'+DIM_COLORS[DIM_ORDER[i]]+'" font-size="10" font-weight="500">'+DIM_LABELS[DIM_ORDER[i]]+'</text>';
         }
-
         
-
         // Data polygon
-
-        const pts = order.map((d, i) => {
-
+        const pts = DIM_ORDER.map((d, i) => {
             const angle = (i * 60 - 90) * Math.PI / 180;
-
-            const pr = Math.min(dims[d] / 8 * r, r);
-
-            return `${cx + pr * Math.cos(angle)},${cy + pr * Math.sin(angle)}`;
-
+            const pr = Math.min(dims[d] / dimMax[d] * r, r);
+            return (cx + pr * Math.cos(angle)) + ',' + (cy + pr * Math.sin(angle));
         });
-
-        html += `<polygon points="${pts.join(' ')}" fill="rgba(233,69,96,0.2)" stroke="#e94560" stroke-width="2"/>`;
-
+        html += '<polygon points="'+pts.join(' ')+'" fill="rgba(233,69,96,0.2)" stroke="#e94560" stroke-width="2"/>';
         
-
-        // Dots
-
-        order.forEach((d, i) => {
-
+        // Data dots
+        DIM_ORDER.forEach((d, i) => {
             const angle = (i * 60 - 90) * Math.PI / 180;
-
-            const pr = Math.min(dims[d] / 8 * r, r);
-
-            html += `<circle cx="${cx + pr * Math.cos(angle)}" cy="${cy + pr * Math.sin(angle)}" r="5" fill="${colors[i]}" stroke="#fff" stroke-width="2"/>`;
-
+            const pr = Math.min(dims[d] / dimMax[d] * r, r);
+            html += '<circle cx="'+(cx + pr * Math.cos(angle))+'" cy="'+(cy + pr * Math.sin(angle))+'" r="5" fill="'+DIM_COLORS[d]+'" stroke="#fff" stroke-width="2"/>';
         });
-
         
-
         svg.innerHTML = html;
-
         
-
         // Legend
-
         let leg = '';
-
-        order.forEach((d, i) => {
-
-            leg += `<div class="legend-item"><span class="legend-dot" style="background:${colors[i]}"></span>${labels[i]}: ${dims[d]}分</div>`;
-
+        DIM_ORDER.forEach(d => {
+            const pct = Math.round(dims[d] / dimMax[d] * 100);
+            leg += '<div class="legend-item"><span class="legend-dot" style="background:'+DIM_COLORS[d]+'"></span>'+DIM_LABELS[d]+' '+dims[d]+'/'+dimMax[d]+' ('+pct+'%)</div>';
         });
-
         document.getElementById('radar-legend').innerHTML = leg;
-
     }
-
     
-
     function renderReport() {
-
         const scores = getScores();
-
         const dims = calculateDimensions(scores);
-
         const sorted = Object.entries(dims).sort((a, b) => b[1] - a[1]);
-
         const main = sorted[0];
-
-        const secondary = sorted.find(([, s]) => s > 0 && s < main[1]) || null;
-
-        const safeDims = sorted.filter(([, s]) => s <= 2);
-
+        const secondary = sorted.find(([k, v]) => v > 0 && v < main[1]) || null;
+        const safeDims = sorted.filter(([, v]) => v / dimMax[DIM_ORDER.find(d => d === DIM_ORDER[0] || true)] <= 0.25);
+        // Simpler: safe = score is in bottom 25% of max for that dim
+        const safeFiltered = Object.entries(dims).filter(([k, v]) => v / dimMax[k] <= 0.3);
         
-
-        // Health score: max possible = ~24, map to 0-100
-
-        const maxScore = Math.max(...Object.values(dims));
-
-        const health = Math.max(10, Math.round(100 - maxScore * 6));
-
+        // Health score
+        const totalScore = Object.values(dims).reduce((a, b) => a + b, 0);
+        const health = Math.max(0, Math.round(100 - totalScore / TOTAL_MAX * 100));
         document.getElementById('health-score').textContent = health;
-
         document.getElementById('health-desc').textContent =
-
-            health >= 85 ? '你的各项指标都很健康，继续保持！' :
-
-            health >= 70 ? '整体不错，有1-2个维度需要注意' :
-
+            health >= 85 ? '恭喜！各指标健康，你的人际模式非常健康' :
+            health >= 70 ? '整体良好，有1-2个维度需要注意' :
             health >= 50 ? '多个维度有信号，需要有意识地调整' :
-
             '核心弱点明显，建议重点关注并改进';
-
         
-
         drawRadar(dims);
-
         
-
+        // Main weakness
         const mainD = dimData[main[0]];
-
         document.getElementById('main-icon').textContent = mainD.icon;
-
         document.getElementById('main-name').textContent = mainD.name;
-
         document.getElementById('main-desc').textContent = mainD.desc;
-
-        document.getElementById('main-score').textContent = main[1] + '分';
-
+        document.getElementById('main-score').textContent = Math.round(main[1] / dimMax[main[0]] * 100) + '%';
         document.getElementById('carnegie-quote').textContent = mainD.quote;
-
         document.getElementById('why-section').textContent = mainD.why;
-
         document.getElementById('carnegie-why-block').textContent = mainD.carnegieWhy;
-
         document.getElementById('impact-section').textContent = mainD.impact;
-
         document.getElementById('carnegie-impact-block').textContent = mainD.carnegieImpact;
-
         
-
-        // Actions
-
+        // Action tips
         let actHtml = '';
-
         mainD.actions.forEach((a, i) => {
-
-            actHtml += `<div class="action-card"><span class="action-num">${i+1}</span><span class="action-text">${a}</span></div>`;
-
+            actHtml += '<div class="action-card"><span class="action-num">'+(i+1)+'</span><span class="action-text">'+a+'</span></div>';
         });
-
         document.getElementById('action-tips').innerHTML = actHtml;
-
         
-
-        // Secondary
-
-        if (secondary) {
-
+        // Secondary weakness
+        if (secondary && secondary[1] / dimMax[secondary[0]] > 0.3) {
             document.getElementById('secondary-section').style.display = 'block';
-
             const secD = dimData[secondary[0]];
-
             document.getElementById('secondary-weakness').innerHTML =
-
-                `<div class="secondary-card">
-
-                    <span class="secondary-icon">${secD.icon}</span>
-
-                    <div class="secondary-info">
-
-                        <div class="secondary-name">${secD.name}</div>
-
-                        <div class="secondary-desc">${secD.desc}</div>
-
-                    </div>
-
-                    <span class="secondary-score">${secondary[1]}分</span>
-
-                </div>`;
-
+                '<div class="secondary-card">' +
+                '<span class="secondary-icon">'+secD.icon+'</span>' +
+                '<div class="secondary-info">' +
+                '<div class="secondary-name">'+secD.name+'</div>' +
+                '<div class="secondary-desc">'+secD.desc+'</div>' +
+                '</div>' +
+                '<span class="secondary-score">'+Math.round(secondary[1]/dimMax[secondary[0]]*100)+'%</span>' +
+                '</div>';
         }
-
         
-
         // Safe zone
-
-        if (safeDims.length > 0) {
-
+        if (safeFiltered.length > 0) {
             let safeHtml = '';
-
-            safeDims.forEach(([d, s]) => {
-
+            safeFiltered.forEach(([d, v]) => {
                 const sd = dimData[d];
-
-                safeHtml += `<div class="safe-card"><span class="safe-icon">${sd.icon}</span><span class="safe-name">${sd.name}</span>（${s}分）——这方面你表现健康！</div>`;
-
+                safeHtml += '<div class="safe-card"><span class="safe-icon">'+sd.icon+'</span><span class="safe-name">'+sd.name+'</span>（'+Math.round(v/dimMax[d]*100)+'%）—— 这方面你表现健康！</div>';
             });
-
             document.getElementById('safe-weakness').innerHTML = safeHtml;
-
         }
-
         
-
-        // Share button
-
+        // Share
         document.getElementById('share-btn').onclick = function() {
-
             const mainName = document.getElementById('main-name').textContent;
-
-            const mainScore = document.getElementById('main-score').textContent;
-
-            const txt = `🔍 我在【测测你的人性弱点】中测出了我的致命短板...\n\n我的弱点是：${mainName}（${mainScore}）\n\n"${mainD.quote.substring(0, 50)}..."\n\n卡内基说这是人际关系的最大杀手\n快来测测你的 ↓`;
-
-            navigator.clipboard.writeText(txt).then(() => alert('已复制！去小红书分享吧~'));
-
+            const mainPct = document.getElementById('main-score').textContent;
+            const quote = mainD.quote.substring(0, 45);
+            const txt = '我在【测测你的人性弱点】中发现了自己的致命短板：\n\n' + mainD.icon + ' '+mainName+'（'+mainPct+'）\n\n"'+quote+'..."\n\n卡内基说这是人际关系的最大杀手之一\n快来测测你的 ↓';
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(txt).then(function() {
+                    alert('已复制！去小红书/朋友圈分享吧~');
+                });
+            }
         };
-
     }
-
     
-
     renderReport();
-
     </script>
-
 </body>
-
 </html>
-
-EOF
-
-echo "✅ result.html rewritten"
