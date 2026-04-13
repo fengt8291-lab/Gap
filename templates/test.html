@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人性弱点测试 | 第 {n}/25 题</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans SC', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        
+        /* Progress */
+        .progress-box { margin-bottom: 30px; }
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #8892b0;
+            margin-bottom: 10px;
+        }
+        .progress-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e94560, #ff6b6b);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        /* Question */
+        .question-box {
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .question-num {
+            font-size: 13px;
+            color: #e94560;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .question-text {
+            font-size: 18px;
+            line-height: 1.7;
+            font-weight: 500;
+        }
+        
+        /* Options */
+        .option {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin: 12px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        .option:hover {
+            background: rgba(233,69,96,0.1);
+            border-color: rgba(233,69,96,0.3);
+            transform: translateX(5px);
+        }
+        .option.selected {
+            background: rgba(233,69,96,0.2);
+            border-color: #e94560;
+        }
+        .option-letter {
+            width: 28px;
+            height: 28px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .option.selected .option-letter {
+            background: #e94560;
+        }
+        .option-text { font-size: 15px; line-height: 1.6; padding-top: 3px; }
+        
+        /* Navigation */
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .btn {
+            padding: 14px 30px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-prev {
+            background: rgba(255,255,255,0.1);
+            color: #8892b0;
+        }
+        .btn-prev:hover { background: rgba(255,255,255,0.15); }
+        .btn-next {
+            background: linear-gradient(135deg, #e94560, #c0392b);
+            color: #fff;
+        }
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(233,69,96,0.3);
+        }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="progress-box">
+            <div class="progress-info">
+                <span id="progress-text">第 1/25 题</span>
+                <span id="progress-percent">4%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width:4%"></div>
+            </div>
+        </div>
+        
+        <div class="question-box">
+            <div class="question-num" id="question-num">问题 1</div>
+            <div class="question-text" id="question-text">加载中...</div>
+        </div>
+        
+        <div id="options"></div>
+        
+        <div class="nav">
+            <button class="btn btn-prev" id="btn-prev" onclick="prevQuestion()" disabled>← 上一题</button>
+            <button class="btn btn-next" id="btn-next" onclick="nextQuestion()" disabled>下一题 →</button>
+        </div>
+    </div>
+    
+    <script>
+    const questions = [
+        { q: "你和同事一起完成项目，同事的方案有明显漏洞，你会？", o: ["当面直接指出：\"这个方向有问题，你应该...\"", "私底下委婉提醒：\"如果这样调整会不会更好？\"", "无所谓，反正不是我负责", "表面同意，背后跟别人吐槽"] },
+        { q: "朋友最近刚分手，心情很低落，TA找你倾诉，你会？", o: ["认真倾听，适时安慰，给TA建议", "听了一会儿就把话题转到自己身上", "觉得烦，找借口先挂了", "说：\"这种事想开点就好了\"然后继续忙自己的"] },
+        { q: "和刚认识的人聊天，你们聊了一会儿后，通常谁更了解对方的情况？", o: ["差不多，我了解TA的，TA也了解我的", "大部分是我在说，TA在听", "大部分是TA在说，我在引导", "我会主动问TA的问题"] },
+        { q: "你加了一个新客户的微信，一周后TA给你发消息，你会？", o: ["立刻想起TA是谁，翻看聊天记录确认细节", "想不起来是谁，尴尬地问\"请问您是？\"", "硬着头皮聊，祈祷不被发现", "备注了名字所以能想起来"] },
+        { q: "朋友穿了一件新衣服问你好不好看，你觉得不太适合TA，你会？", o: ["直接说：\"说实话不太适合你，换一件吧\"", "说：\"嗯，尝试新风格挺好！\"", "敷衍：\"还行吧\"", "转移话题聊别的"] },
+        { q: "你和伴侣为去哪吃饭争论起来，TA坚持去你想去的餐厅，你会？", o: ["接受分歧：\"那就去你想去的吧\"", "不行，必须说服TA去我选的", "继续争论，直到一方妥协", "提出折中方案"] },
+        { q: "你主动联系一个很久没联系的朋友，通常是因为？", o: ["想TA了，想聊聊近况", "正好有事需要TA帮忙", "约出来吃个饭叙叙旧", "想借机认识TA的其他资源"] },
+        { q: "排队时有人插队到你前面，你会？", o: ["直接说：\"不好意思，请在后面排队\"", "假装没看见，不想惹麻烦", "大声指责：\"你凭什么插队！\"", "算了，反正也没等很久"] },
+        { q: "朋友跟你分享TA最近升职的好消息，你会？", o: ["真心替TA高兴，详细问问情况", "祝贺之后开始讲自己的职场经历", "敷衍一句，然后说自己的事", "问TA怎么做到的，表示想学习"] },
+        { q: "团队开会时，老板问大家意见，你觉得老板的方案有明显问题，你会？", o: ["当场提出：\"老板，我有个不同的想法...\"", "会后单独找老板沟通", "沉默，心想反正不关我事", "先肯定方案，再委婉补充"] },
+        { q: "你和相亲对象第一次见面，结束时对方自我介绍了名字，你会？", o: ["几分钟内默念几遍，24小时内还能说出来", "出了门就忘了，过几天完全想不起来", "记住了名字但忘了长什么样子", "顺便问了职业和兴趣，顺便记住了"] },
+        { q: "网上有人发表了和你截然相反的观点，你会？", o: ["看完思考一下，也许有道理", "直接反驳，写一大段论证自己", "觉得可笑，直接嘲讽", "无所谓，跟我没关系"] },
+        { q: "同事工作中遇到了困难，向你请教，你手头正好也不轻松，你会？", o: ["耐心帮忙，尽量抽时间解释", "说：\"这个问题我也不太清楚，你问问别人吧\"", "简单敷衍两句就打发", "告诉他：\"我现在忙，等会儿找你\""] },
+        { q: "微信上有人给你发消息，通常你们对话的节奏是？", o: ["彼此问答交替，聊得很均衡", "大部分是我在问，TA在答", "大部分是我在说，TA偶尔回应", "TA问一句我答一句，很干"] },
+        { q: "你加了一个行业前辈的微信，你会？", o: ["先真诚地自我介绍，等待回应", "直接发消息问能不能语音/见面", "先翻遍TA的朋友圈，找共同话题", "打照顾后直接问能不能带我"] },
+        { q: "室友总是很晚洗澡影响你休息，你会？", o: ["直接发消息批评：\"你每次都这样，能不能注意点？\"", "找个机会当面好好聊一下", "忍着不说，自己生闷气", "委婉说：\"我睡眠浅，最近有点受影响...\""] },
+        { q: "上次聚会你认识了一个有趣的人，TA说了一件很有意思的事，你会？", o: ["记住内容，过很久还能跟别人提起", "记得大概，但细节都忘了", "完全不记得说过这事", "记得这事，但忘了是谁说的"] },
+        { q: "朋友说你最近某个做法不太合适，你会？", o: ["先感谢反馈，再思考是否有道理", "立刻反驳：\"不是那样的，你不懂\"", "不说话，心里很不爽", "认真问清楚是哪里不合适"] },
+        { q: "过年回家，父母唠叨你的生活选择，你会？", o: ["认真听，偶尔解释自己的想法", "左耳进右耳出，表面上应付", "直接打断：\"别说了，你们不懂\"", "找个借口回房间躲清静"] },
+        { q: "你和新同事一起吃午饭，你会主动聊什么？", o: ["问TA的经历、喜好、工作情况", "介绍自己的背景和经验", "边吃边刷手机，等TA找话题", "分享一些自己觉得有趣的事，也问问TA的看法"] },
+        { q: "你参加了一个社群活动，你会？", o: ["认识各种人，先给予再索取", "找能给自己带来价值的人聊", "比较被动，等别人来找我", "真诚地和每个人交流"] },
+        { q: "你通常什么时候效率最高？", o: ["早上头脑清醒的时候", "晚上安静没人打扰的时候", "有压力截止日期前的时候", "状态好的时候随时可以"] },
+        { q: "朋友跟你说过TA的重要日期（生日/纪念日等），你会？", o: ["主动记在日历里，到时候送上祝福", "当时记住了，过几天就忘了", "觉得记这些太麻烦，顺其自然", "在手机备注里记下来"] },
+        { q: "你被同事当众指出了一个错误，你会？", o: ["虚心接受，感谢对方指出", "立刻解释不是我的问题", "当场反驳，把责任推回去", "表面点头，心里记仇"] },
+        { q: "你为什么愿意帮助别人？", o: ["因为助人有意义，帮助本身是回报", "希望对方以后也能帮到我", "看关系远近，亲近的人就帮", "帮助别人能让我感觉有价值"] }
+    ];
+    
+    const letters = ['A', 'B', 'C', 'D'];
+    let currentQ = 0;
+    let answers = {};
+    const code = new URLSearchParams(window.location.search).get('code') || 'demo';
+    
+    function renderQuestion() {
+        const q = questions[currentQ];
+        document.getElementById('question-num').textContent = `问题 ${currentQ + 1}`;
+        document.getElementById('question-text').textContent = q.q;
+        document.getElementById('progress-text').textContent = `第 ${currentQ + 1}/25 题`;
+        document.getElementById('progress-percent').textContent = `${Math.round((currentQ + 1) / 25 * 100)}%`;
+        document.getElementById('progress-fill').style.width = `${(currentQ + 1) / 25 * 100}%`;
+        
+        const optionsHtml = q.o.map((opt, i) => `
+            <div class="option ${answers[currentQ] === i ? 'selected' : ''}" onclick="selectOption(${i})">
+                <span class="option-letter">${letters[i]}</span>
+                <span class="option-text">${opt}</span>
+            </div>
+        `).join('');
+        document.getElementById('options').innerHTML = optionsHtml;
+        
+        document.getElementById('btn-prev').disabled = currentQ === 0;
+        document.getElementById('btn-next').disabled = answers[currentQ] === undefined;
+        document.getElementById('btn-next').textContent = currentQ === 24 ? '查看结果 →' : '下一题 →';
+        
+        document.title = `人性弱点测试 | 第 ${currentQ + 1}/25 题`;
+    }
+    
+    function selectOption(idx) {
+        answers[currentQ] = idx;
+        renderQuestion();
+    }
+    
+    function nextQuestion() {
+        if (currentQ < 24) {
+            currentQ++;
+            renderQuestion();
+        } else {
+            submitTest();
+        }
+    }
+    
+    function prevQuestion() {
+        if (currentQ > 0) {
+            currentQ--;
+            renderQuestion();
+        }
+    }
+    
+    function submitTest() {
+        const params = new URLSearchParams();
+        params.set('code', code);
+        for (let i = 0; i < 25; i++) {
+            if (answers[i] !== undefined) {
+                params.set('q' + (i + 1), answers[i]);
+            }
+        }
+        window.location.href = '/result?' + params.toString();
+    }
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+            if (answers[currentQ] !== undefined) nextQuestion();
+        } else if (e.key === 'ArrowLeft') {
+            prevQuestion();
+        } else if (e.key >= '1' && e.key <= '4') {
+            selectOption(parseInt(e.key) - 1);
+        } else if (e.key.toLowerCase() >= 'a' && e.key.toLowerCase() <= 'd') {
+            selectOption(e.key.toLowerCase().charCodeAt(0) - 97);
+        }
+    });
+    
+    renderQuestion();
+    </script>
+</body>
+</html>
