@@ -5,18 +5,17 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 import json
 import sqlite3
-from datetime import datetime
 import os
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'weak-secret-key-2026')
 
-# Load config
 WEEK_CODE = os.environ.get('WEEK_CODE', 'weak2026')
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'weakadmin')
+DB_PATH = os.environ.get('DB_PATH', 'weak.db')
 
 def get_db():
-    conn = sqlite3.connect('weak.db')
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -43,6 +42,9 @@ def init_db():
     conn.commit()
     conn.close()
 
+# Initialize DB on module load
+init_db()
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -58,54 +60,56 @@ def result():
     for i in range(1, 26):
         val = request.args.get(f'q{i}')
         if val is not None:
-            answers[i] = int(val)
+            try:
+                answers[i] = int(val)
+            except:
+                answers[i] = 0
     
     # Calculate scores
     scores = calculate_scores(answers)
     
     # Save to DB
-    conn = get_db()
-    c = conn.cursor()
-    c.execute('INSERT INTO test_submissions (answers, scores) VALUES (?, ?)',
-              (json.dumps(answers), json.dumps(scores)))
-    conn.commit()
-    conn.close()
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('INSERT INTO test_submissions (answers, scores) VALUES (?, ?)',
+                  (json.dumps(answers), json.dumps(scores)))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        app.logger.error(f"DB error: {e}")
     
     return render_template('result.html', answers=answers, scores=scores)
 
 def calculate_scores(answers):
-    """Calculate dimension scores based on answers"""
-    # Score mapping for each question
-    # Each option maps to -1, 0, 1, or 2 points
     score_map = {
-        1: [2, 0, 1, 2],   # criticism
-        2: [0, 1, 2, 1],   # indifference
-        3: [0, 2, 0, -1],  # narcissism
-        4: [0, 2, 2, -1],  # forgetful
-        5: [2, 0, 1, 0],   # criticism
-        6: [-1, 2, 1, 0],  # defensive
-        7: [0, 2, 0, 2],   # taking
-        8: [0, 1, 2, 1],   # indifference
-        9: [0, 1, 2, -1],  # narcissism
-        10: [2, 0, 1, -1], # criticism
-        11: [-1, 2, 1, 0], # forgetful
-        12: [0, 2, 2, 1],  # defensive
-        13: [0, 2, 1, 0],  # indifference
-        14: [0, 0, 2, 1],  # narcissism
-        15: [0, 2, 0, 1],  # taking
-        16: [2, 0, 1, -1], # criticism
-        17: [-1, 0, 2, 1], # forgetful
-        18: [-1, 2, 1, 0], # defensive
-        19: [0, 1, 2, 2],  # indifference
-        20: [-1, 1, 1, 0], # narcissism
-        21: [0, 2, 1, -1], # taking
-        22: [0, 0, 0, 0],  # balance question (no score)
-        23: [-1, 2, 1, 0], # forgetful
-        24: [-1, 2, 2, 1], # defensive
-        25: [-1, 2, 0, 1]   # taking
+        1: [2, 0, 1, 2],
+        2: [0, 1, 2, 1],
+        3: [0, 2, 0, -1],
+        4: [0, 2, 2, -1],
+        5: [2, 0, 1, 0],
+        6: [-1, 2, 1, 0],
+        7: [0, 2, 0, 2],
+        8: [0, 1, 2, 1],
+        9: [0, 1, 2, -1],
+        10: [2, 0, 1, -1],
+        11: [-1, 2, 1, 0],
+        12: [0, 2, 2, 1],
+        13: [0, 2, 1, 0],
+        14: [0, 0, 2, 1],
+        15: [0, 2, 0, 1],
+        16: [2, 0, 1, -1],
+        17: [-1, 0, 2, 1],
+        18: [-1, 2, 1, 0],
+        19: [0, 1, 2, 2],
+        20: [-1, 1, 1, 0],
+        21: [0, 2, 1, -1],
+        22: [0, 0, 0, 0],
+        23: [-1, 2, 1, 0],
+        24: [-1, 2, 2, 1],
+        25: [-1, 2, 0, 1]
     }
     
-    # Dimension mapping
     dim_map = {
         1: 'criticism', 2: 'indifference', 3: 'narcissism', 4: 'forgetful',
         5: 'criticism', 6: 'defensive', 7: 'taking', 8: 'indifference',
@@ -119,9 +123,7 @@ def calculate_scores(answers):
     
     for q_num, answer in answers.items():
         if q_num in score_map and q_num in dim_map:
-            score = score_map[q_num][answer]
-            dim = dim_map[q_num]
-            scores[dim] += score
+            scores[dim_map[q_num]] += score_map[q_num][answer]
     
     return scores
 
@@ -146,5 +148,4 @@ def stats():
     return jsonify({'total': total})
 
 if __name__ == '__main__':
-    init_db()
     app.run(host='0.0.0.0', port=5002, debug=True)
