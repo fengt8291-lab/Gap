@@ -9,7 +9,6 @@ var DIM_COLORS={criticism:'#e74c3c',indifference:'#95a5a6',narcissism:'#f39c12',
 function getScores(){var p=new URLSearchParams(window.location.search);var r={};for(var i=1;i<=25;i++){var v=p.get('q'+i);r[i]=v!==null?parseInt(v):0;}return r;}
 function calcDims(scores){var d={criticism:0,indifference:0,narcissism:0,forgetful:0,defensive:0,taking:0};for(var q=1;q<=25;q++){var dm=dimMap[q];if(!dm)continue;d[dm]+=(q>=20)?scores[q]:Math.max(0,MC[scores[q]]);}return d;}
 function healthOf(dims){var h={};for(var k in dims)h[k]=Math.max(0,Math.round(100-dims[k]/dimMax[k]*100));return h;}
-// fc: color by percentage - >=70 green, >=50 yellow, <50 red
 function fc(p){return p>=70?'#2ecc71':p>=50?'#f39c12':'#e74c3c';}
 
 function drawRadar(h,dims){
@@ -33,6 +32,24 @@ function drawRadar(h,dims){
 }
 
 function toggleDim(idx){var b=document.getElementById('dim-body-'+idx);var t=document.getElementById('dim-toggle-'+idx);if(b.classList.contains('open')){b.classList.remove('open');t.classList.remove('open');}else{b.classList.add('open');t.classList.add('open');}}
+
+function shuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+function renderBooks(){
+    var cards=document.querySelectorAll('.book-card');
+    var picks=shuffle(ALL_BOOKS).slice(0,3);
+    cards.forEach(function(card,idx){
+        if(idx<picks.length){
+            var b=picks[idx];
+            card.querySelector('.book-title').textContent=b.Title;
+            card.querySelector('.book-author').textContent=b.Author;
+            card.querySelector('.book-desc').textContent=b.Desc;
+            card.style.display='flex';
+        } else {
+            card.style.display='none';
+        }
+    });
+}
 
 function renderReport(){
     var scores=getScores();
@@ -71,6 +88,7 @@ function renderReport(){
     document.getElementById('dim-cards').innerHTML=dimCardsHtml;
     if(safeDims.length>0){var sh='';safeDims.forEach(function(kv){var sd=dimData[kv[0]];sh+='<div class="safe-card"><span class="safe-icon">'+sd.icon+'</span><span class="safe-name">'+sd.name+'</span>（'+h[kv[0]]+'%）— 这方面你表现健康！</div>';});document.getElementById('safe-weakness').innerHTML=sh;}
     else{document.getElementById('safe-section').style.display='none';}
+    renderBooks();
     var shareBtn=document.getElementById('share-btn');
     shareBtn.onclick=function(){
         var mn=document.getElementById('main-name').textContent;
