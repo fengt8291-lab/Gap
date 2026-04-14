@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>人性弱点测试 | 第 1/25 题</title>
+    <title>你的人际关系隐形裂隙 | 第 1/25 题</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
@@ -280,7 +280,7 @@ function renderQuestion(){
     document.getElementById('q-num').textContent=currentQ+1;
     document.getElementById('q-fraction').textContent=`${currentQ+1} / 25`;
     document.getElementById('progress-fill').style.width=`${(currentQ+1)/25*100}%`;
-    document.title=`人性弱点测试 | 第 ${currentQ+1}/25 题`;
+    document.title=`你的人际关系隐形裂隙 | 第 ${currentQ+1}/25 题`;
     document.getElementById('q-dim-tag').textContent=isScale?'量表题':'选择题';
     document.getElementById('q-text').textContent=q.sq;
     const stmtEl=document.getElementById('scale-stmt');
