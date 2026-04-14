@@ -71,7 +71,6 @@ function renderReport(){
     else{hc.style.borderColor='rgba(22,163,74,0.15)';hc.style.background='rgba(22,163,74,0.02)';hs.style.color='#16a34a';hd.style.color='#888';hl.style.color='#16a34a';hd.textContent='恭喜！各指标健康，你的人际模式非常健康';}
     drawRadar(h,dims);
     var mainD=dimData[main[0]];
-    document.getElementById('main-icon').textContent=mainD.icon;
     document.getElementById('main-name').textContent=mainD.name;
     document.getElementById('main-desc').textContent=mainD.desc;
     document.getElementById('main-score-tag').textContent=h[main[0]]+'%';
