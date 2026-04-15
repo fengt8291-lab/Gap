@@ -181,10 +181,11 @@
 
     <div class="input-card">
         <label class="input-label">输入通行码开始测试</label>
-        <input type="text" class="input-code" id="code" placeholder="输入 test 开始体验" maxlength="20" value="test">
+        <input type="text" class="input-code" id="code" placeholder="输入通行码开始测试" maxlength="20" autocomplete="off">
     </div>
 
-    <button class="btn-primary" onclick="startTest()">开始测试 →</button>
+        <button class="btn-primary" id="start-btn" onclick="startTest()">开始测试 →</button>
+    <div id="error-msg" style="color:#dc2626;font-size:13px;margin-top:10px;display:none"></div>
 
     <div class="features">
         <div class="feature">
@@ -216,9 +217,35 @@
 </div>
 
 <script>
-function startTest() {
-    const code = document.getElementById('code').value.trim() || 'test';
-    window.location.href = '/test?code=' + encodeURIComponent(code);
+async function startTest() {
+    const code = document.getElementById('code').value.trim();
+    const btn = document.getElementById('start-btn');
+    const err = document.getElementById('error-msg');
+    if (!code) {
+        err.textContent = '请输入通行码';
+        err.style.display = 'block';
+        return;
+    }
+    btn.disabled = true;
+    btn.textContent = '验证中...';
+    err.style.display = 'none';
+    try {
+        const r = await fetch(`/api/verify_code?code=${encodeURIComponent(code)}`);
+        const data = await r.json();
+        if (data.valid) {
+            window.location.href = '/test?code=' + encodeURIComponent(code);
+        } else {
+            err.textContent = '通行码错误，请重新输入';
+            err.style.display = 'block';
+            btn.disabled = false;
+            btn.textContent = '开始测试 →';
+        }
+    } catch(e) {
+        err.textContent = '验证失败，请重试';
+        err.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = '开始测试 →';
+    }
 }
 document.getElementById('code').addEventListener('keypress', e => {
     if (e.key === 'Enter') startTest();
