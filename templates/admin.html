@@ -8,170 +8,217 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', -apple-system, sans-serif; background: #0f0f0f; color: #e0e0e0; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: #fafaf8; color: #1a1a1a; min-height: 100vh; -webkit-font-smoothing: antialiased; }
 
-        .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+        /* ===== LOGIN SCREEN ===== */
+        #login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .login-box { background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: 20px; padding: 48px 40px; max-width: 400px; width: 100%; box-shadow: 0 4px 24px rgba(0,0,0,0.06); text-align: center; }
+        .login-logo { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 700; color: #111; margin-bottom: 8px; }
+        .login-logo span { color: #c9a84c; }
+        .login-sub { font-size: 13px; color: #999; margin-bottom: 36px; font-weight: 300; }
+        .login-input { width: 100%; padding: 14px 18px; font-size: 15px; font-family: 'Inter', sans-serif; background: #fafaf8; border: 1px solid rgba(0,0,0,0.12); border-radius: 10px; outline: none; color: #111; margin-bottom: 14px; text-align: center; letter-spacing: 0.1em; transition: border-color .2s; }
+        .login-input:focus { border-color: #c9a84c; }
+        .login-input::placeholder { color: #bbb; letter-spacing: 0; }
+        .login-btn { width: 100%; padding: 14px; background: #111; color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: background .2s; }
+        .login-btn:hover { background: #333; }
+        .login-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .login-error { font-size: 13px; color: #dc2626; margin-top: 12px; display: none; }
+        .login-error.show { display: block; }
+
+        /* ===== MAIN CONTENT (hidden until login) ===== */
+        #main-content { display: none; }
+
+        .container { max-width: 960px; margin: 0 auto; padding: 32px 20px; }
 
         /* Header */
-        .header { margin-bottom: 36px; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: #c9a84c; }
-        .logo span { color: #666; font-weight: 400; }
-        .refresh-btn { background: #1a1a1a; border: 1px solid #333; color: #888; padding: 8px 18px; border-radius: 8px; cursor: pointer; font-size: 13px; transition: all .2s; }
+        .header { margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 20px; }
+        .logo { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: #111; }
+        .logo span { color: #999; font-weight: 400; }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .refresh-btn { background: #fff; border: 1px solid rgba(0,0,0,0.15); color: #666; padding: 8px 18px; border-radius: 8px; cursor: pointer; font-size: 13px; font-family: 'Inter', sans-serif; transition: all .2s; display: flex; align-items: center; gap: 6px; }
         .refresh-btn:hover { border-color: #c9a84c; color: #c9a84c; }
+        .refresh-btn.loading { opacity: 0.6; pointer-events: none; }
+        .logout-btn { background: #fff; border: 1px solid rgba(0,0,0,0.12); color: #999; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-family: 'Inter', sans-serif; transition: all .2s; }
+        .logout-btn:hover { border-color: #dc2626; color: #dc2626; }
 
         /* KPI Cards */
-        .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 32px; }
-        .kpi { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 14px; padding: 20px 18px; }
-        .kpi-label { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #555; margin-bottom: 10px; font-weight: 500; }
-        .kpi-value { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 700; color: #c9a84c; line-height: 1; }
-        .kpi-sub { font-size: 11px; color: #444; margin-top: 6px; }
+        .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 28px; }
+        .kpi { background: #fff; border: 1px solid rgba(0,0,0,0.07); border-radius: 14px; padding: 22px 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+        .kpi-label { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #aaa; margin-bottom: 10px; font-weight: 500; }
+        .kpi-value { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 700; color: #111; line-height: 1; }
+        .kpi-sub { font-size: 11px; color: #bbb; margin-top: 6px; }
 
         /* Section */
-        .section { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 16px; padding: 24px; margin-bottom: 20px; }
-        .section-title { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #555; margin-bottom: 20px; font-weight: 500; }
+        .section { background: #fff; border: 1px solid rgba(0,0,0,0.07); border-radius: 16px; padding: 24px; margin-bottom: 18px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+        .section-title { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #aaa; margin-bottom: 20px; font-weight: 500; padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); }
 
         /* Chart */
-        .chart-wrap { overflow-x: auto; }
-        .bar-chart { display: flex; align-items: flex-end; gap: 4px; height: 120px; min-width: 600px; }
+        .chart-wrap { overflow-x: auto; padding-bottom: 4px; }
+        .bar-chart { display: flex; align-items: flex-end; gap: 3px; height: 120px; min-width: 640px; }
         .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; }
-        .bar { width: 100%; background: linear-gradient(to top, #c9a84c, #8a7040); border-radius: 2px 2px 0 0; min-height: 2px; transition: height .4s ease; }
-        .bar-label { font-size: 9px; color: #444; white-space: nowrap; }
-        .bar-num { font-size: 10px; color: #666; }
+        .bar { width: 100%; background: linear-gradient(to top, #c9a84c, #d4b860); border-radius: 2px 2px 0 0; min-height: 2px; transition: height .4s ease; }
+        .bar:hover { background: linear-gradient(to top, #b8993f, #c9a84c); }
+        .bar-label { font-size: 9px; color: #bbb; white-space: nowrap; }
+        .bar-num { font-size: 10px; color: #999; font-weight: 500; }
 
         /* Table */
+        .table-wrap { overflow-x: auto; }
         .table { width: 100%; border-collapse: collapse; }
-        .table th { font-size: 11px; color: #555; text-align: left; padding: 8px 10px; border-bottom: 1px solid #2a2a2a; font-weight: 500; letter-spacing: .05em; }
-        .table td { font-size: 13px; padding: 10px 10px; border-bottom: 1px solid #1e1e1e; color: #aaa; }
-        .table tr:hover td { background: #222; }
-        .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
-        .badge-high { background: rgba(220,38,38,.15); color: #dc2626; border: 1px solid rgba(220,38,38,.3); }
-        .badge-mid { background: rgba(217,119,6,.15); color: #d97706; border: 1px solid rgba(217,119,6,.3); }
-        .badge-low { background: rgba(22,163,74,.15); color: #16a34a; border: 1px solid rgba(22,163,74,.3); }
+        .table th { font-size: 11px; color: #aaa; text-align: left; padding: 10px 12px; border-bottom: 2px solid rgba(0,0,0,0.06); font-weight: 500; letter-spacing: .05em; white-space: nowrap; }
+        .table td { font-size: 13px; padding: 11px 12px; border-bottom: 1px solid rgba(0,0,0,0.04); color: #444; }
+        .table tbody tr:hover td { background: #fafaf8; }
+        .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+        .badge-high { background: rgba(220,38,38,.08); color: #dc2626; border: 1px solid rgba(220,38,38,.2); }
+        .badge-mid { background: rgba(217,119,6,.08); color: #d97706; border: 1px solid rgba(217,119,6,.2); }
+        .badge-low { background: rgba(22,163,74,.08); color: #16a34a; border: 1px solid rgba(22,163,74,.2); }
 
         /* Dim bars */
-        .dim-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-        .dim-label { font-size: 13px; color: #888; min-width: 60px; }
-        .dim-bar-wrap { flex: 1; height: 6px; background: #2a2a2a; border-radius: 3px; overflow: hidden; }
-        .dim-bar-fill { height: 100%; border-radius: 3px; transition: width .6s ease; }
-        .dim-score { font-size: 12px; color: #666; min-width: 40px; text-align: right; }
+        .dim-row { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+        .dim-label { font-size: 13px; color: #555; min-width: 56px; font-weight: 400; }
+        .dim-bar-wrap { flex: 1; height: 7px; background: rgba(0,0,0,0.06); border-radius: 4px; overflow: hidden; }
+        .dim-bar-fill { height: 100%; border-radius: 4px; transition: width .6s ease; }
+        .dim-score { font-size: 13px; font-weight: 600; min-width: 36px; text-align: right; }
 
-        /* Access code form */
+        /* Code form */
         .code-form { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .code-form input { background: #111; border: 1px solid #333; border-radius: 8px; padding: 10px 14px; color: #e0e0e0; font-size: 14px; outline: none; width: 180px; }
+        .code-form input { background: #fafaf8; border: 1px solid rgba(0,0,0,0.12); border-radius: 8px; padding: 10px 14px; color: #111; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; width: 160px; transition: border-color .2s; }
         .code-form input:focus { border-color: #c9a84c; }
-        .code-form button { background: #c9a84c; color: #111; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all .2s; }
-        .code-form button:hover { background: #d4b560; }
-        .code-form button.danger { background: #dc2626; color: #fff; }
+        .code-form input::placeholder { color: #bbb; }
+        .code-form button { background: #111; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif; transition: background .2s; }
+        .code-form button:hover { background: #333; }
+        .code-form button.danger { background: #dc2626; }
         .code-form button.danger:hover { background: #ef4444; }
-        .current-code { font-size: 13px; color: #666; margin-top: 8px; }
-        .current-code strong { color: #c9a84c; }
+        .current-code { font-size: 13px; color: #888; margin-top: 12px; }
+        .current-code strong { color: #111; }
 
-        /* Message */
+        /* Messages */
         .msg { font-size: 13px; padding: 10px 14px; border-radius: 8px; margin-top: 10px; display: none; }
-        .msg.ok { display: block; background: rgba(22,163,74,.15); color: #16a34a; border: 1px solid rgba(22,163,74,.3); }
-        .msg.err { display: block; background: rgba(220,38,38,.15); color: #dc2626; border: 1px solid rgba(220,38,38,.3); }
+        .msg.ok { display: block; background: rgba(22,163,74,.08); color: #16a34a; border: 1px solid rgba(22,163,74,.2); }
+        .msg.err { display: block; background: rgba(220,38,38,.08); color: #dc2626; border: 1px solid rgba(220,38,38,.2); }
 
-        /* Empty state */
-        .empty { text-align: center; padding: 40px; color: #444; font-size: 14px; }
+        /* Empty */
+        .empty { text-align: center; padding: 40px; color: #bbb; font-size: 14px; }
+
+        /* Section divider */
+        .section-divider { height: 1px; background: rgba(0,0,0,0.05); margin: 24px 0; }
 
         @media (max-width: 600px) {
-            .container { padding: 20px 14px; }
-            .kpi-value { font-size: 28px; }
-            .table { font-size: 12px; }
+            .container { padding: 16px 14px; }
+            .kpi-value { font-size: 30px; }
+            .kpi { padding: 16px 14px; }
+            .login-box { padding: 36px 24px; }
+            .code-form input { width: 130px; }
         }
     </style>
 </head>
 <body>
-<div class="container">
 
-    <div class="header">
-        <div class="logo">Gap <span>· 数据看板</span></div>
-        <button class="refresh-btn" onclick="loadStats()">↻ 刷新</button>
+<!-- ========== LOGIN SCREEN ========== -->
+<div id="login-screen">
+    <div class="login-box">
+        <div class="login-logo">Gap <span>·</span> 数据看板</div>
+        <p class="login-sub">请输入管理密码登录</p>
+        <input type="password" class="login-input" id="login-pwd" placeholder="管理密码" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+        <button class="login-btn" id="login-btn" onclick="doLogin()">登 录</button>
+        <div class="login-error" id="login-error">密码错误，请重新输入</div>
     </div>
+</div>
 
-    <!-- KPI Cards -->
-    <div class="kpi-row">
-        <div class="kpi">
-            <div class="kpi-label">总测试次数</div>
-            <div class="kpi-value" id="kpi-total">--</div>
-            <div class="kpi-sub">累计</div>
-        </div>
-        <div class="kpi">
-            <div class="kpi-label">最高频裂隙</div>
-            <div class="kpi-value" id="kpi-topdim" style="font-size:24px">--</div>
-            <div class="kpi-sub" id="kpi-topdim-sub">数据不足</div>
-        </div>
-        <div class="kpi">
-            <div class="kpi-label">近24小时</div>
-            <div class="kpi-value" id="kpi-today">--</div>
-            <div class="kpi-sub">次测试</div>
-        </div>
-        <div class="kpi">
-            <div class="kpi-label">今日均分</div>
-            <div class="kpi-value" id="kpi-health" style="font-size:24px">--</div>
-            <div class="kpi-sub">人际健康指数</div>
-        </div>
-    </div>
+<!-- ========== MAIN CONTENT ========== -->
+<div id="main-content">
+    <div class="container">
 
-    <!-- Hourly Chart -->
-    <div class="section">
-        <div class="section-title">近24小时测试分布（每30分钟）</div>
-        <div class="chart-wrap">
-            <div class="bar-chart" id="hourly-chart">
+        <div class="header">
+            <div class="logo">Gap <span>· 数据看板</span></div>
+            <div class="header-right">
+                <button class="refresh-btn" id="refresh-btn" onclick="doRefresh()">↻ 刷新数据</button>
+                <button class="logout-btn" onclick="doLogout()">退出</button>
+            </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-row">
+            <div class="kpi">
+                <div class="kpi-label">总测试次数</div>
+                <div class="kpi-value" id="kpi-total">--</div>
+                <div class="kpi-sub">累计</div>
+            </div>
+            <div class="kpi">
+                <div class="kpi-label">最高频裂隙</div>
+                <div class="kpi-value" id="kpi-topdim" style="font-size:22px">--</div>
+                <div class="kpi-sub" id="kpi-topdim-sub">数据不足</div>
+            </div>
+            <div class="kpi">
+                <div class="kpi-label">近24小时</div>
+                <div class="kpi-value" id="kpi-today">--</div>
+                <div class="kpi-sub">次测试</div>
+            </div>
+            <div class="kpi">
+                <div class="kpi-label">综合均分</div>
+                <div class="kpi-value" id="kpi-health" style="font-size:22px">--</div>
+                <div class="kpi-sub">健康指数</div>
+            </div>
+        </div>
+
+        <!-- Hourly Chart -->
+        <div class="section">
+            <div class="section-title">近24小时测试分布（每小时）</div>
+            <div class="chart-wrap">
+                <div class="bar-chart" id="hourly-chart">
+                    <div class="empty">加载中...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dimension Averages -->
+        <div class="section">
+            <div class="section-title">各维度平均得分（越高 = 裂隙越严重）</div>
+            <div id="dim-list">
                 <div class="empty">加载中...</div>
             </div>
         </div>
-    </div>
 
-    <!-- Dimension Averages -->
-    <div class="section">
-        <div class="section-title">各维度平均得分（越高=裂隙越严重）</div>
-        <div id="dim-list">
-            <div class="empty">加载中...</div>
+        <!-- Recent Results -->
+        <div class="section">
+            <div class="section-title">最近20条测试记录</div>
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>时间</th>
+                            <th>主要裂隙</th>
+                            <th>健康指数</th>
+                            <th>IP</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-tbody">
+                        <tr><td colspan="5" class="empty">加载中...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <!-- Recent Results -->
-    <div class="section">
-        <div class="section-title">最近20条测试记录</div>
-        <div style="overflow-x:auto">
-            <table class="table" id="recent-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>时间</th>
-                        <th>主要裂隙</th>
-                        <th>得分</th>
-                        <th>健康指数</th>
-                        <th>IP</th>
-                    </tr>
-                </thead>
-                <tbody id="recent-tbody">
-                    <tr><td colspan="6" class="empty">加载中...</td></tr>
-                </tbody>
-            </table>
+        <!-- Access Code Management -->
+        <div class="section">
+            <div class="section-title">通行码管理</div>
+            <div class="code-form">
+                <input type="password" id="admin-pwd" placeholder="管理密码" autocomplete="off">
+                <input type="text" id="new-code" placeholder="新通行码（≥3字符）" autocomplete="off">
+                <button onclick="changeCode()">确认修改</button>
+            </div>
+            <div class="current-code">当前通行码：<strong id="current-code-display">--</strong></div>
+            <div class="msg" id="code-msg"></div>
         </div>
-    </div>
 
-    <!-- Access Code Management -->
-    <div class="section">
-        <div class="section-title">通行码管理</div>
-        <div class="code-form">
-            <input type="password" id="admin-pwd" placeholder="管理密码" autocomplete="off">
-            <input type="text" id="new-code" placeholder="新通行码（至少3字符）" autocomplete="off">
-            <button onclick="changeCode()">确认修改</button>
-        </div>
-        <div class="current-code">当前通行码：<strong id="current-code-display">加载中...</strong></div>
-        <div class="msg" id="code-msg"></div>
     </div>
-
 </div>
 
 <script>
 const DIM_COLORS = {
-    'criticism': '#b07a5a', 'indifference': '#8a9ba8',
-    'narcissism': '#c4986a', 'forgetful': '#9685ab',
-    'defensive': '#b08858', 'taking': '#5a9a8b'
+    'criticism': '#c9a84c', 'indifference': '#8a9ba8',
+    'narcissism': '#d97706', 'forgetful': '#7c3aed',
+    'defensive': '#b45309', 'taking': '#059669'
 };
 const DIM_LABELS = {
     'criticism': '谦逊度', 'indifference': '关怀度',
@@ -179,35 +226,106 @@ const DIM_LABELS = {
     'defensive': '开放度', 'taking': '慷慨度'
 };
 
+// ── Auth ──────────────────────────────────────
+let adminPwd = '';
+let statsData = null;
+
+function doLogin() {
+    const pwd = document.getElementById('login-pwd').value;
+    const btn = document.getElementById('login-btn');
+    const err = document.getElementById('login-error');
+    if (!pwd) { err.classList.add('show'); return; }
+    btn.disabled = true;
+    btn.textContent = '验证中...';
+    err.classList.remove('show');
+
+    // Store for later API calls
+    adminPwd = pwd;
+
+    fetch('/api/stats')
+        .then(r => {
+            // If /api/stats requires auth, this will 401
+            // So we use a dedicated verify endpoint instead
+            return r.json();
+        })
+        .then(data => {
+            // No 401 means public - use a separate admin verify
+            // Actually /api/stats is public, so let's verify via /api/change_code with a test
+            return fetch('/api/admin/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ admin_password: pwd })
+            }).then(r => r.json());
+        })
+        .then(data => {
+            if (data.valid) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                loadStats();
+            } else {
+                err.textContent = '密码错误，请重新输入';
+                err.classList.add('show');
+                btn.disabled = false;
+                btn.textContent = '登 录';
+                adminPwd = '';
+            }
+        })
+        .catch(() => {
+            err.textContent = '网络错误，请重试';
+            err.classList.add('show');
+            btn.disabled = false;
+            btn.textContent = '登 录';
+            adminPwd = '';
+        });
+}
+
+function doLogout() {
+    adminPwd = '';
+    statsData = null;
+    document.getElementById('login-pwd').value = '';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('main-content').style.display = 'none';
+}
+
+// ── Refresh ───────────────────────────────────
+function doRefresh() {
+    const btn = document.getElementById('refresh-btn');
+    btn.classList.add('loading');
+    btn.textContent = '↻ 刷新中...';
+    loadStats().finally(() => {
+        btn.classList.remove('loading');
+        btn.textContent = '↻ 刷新数据';
+    });
+}
+
+// ── Load & Render ──────────────────────────────
 async function loadStats() {
-    try {
-        const r = await fetch('/api/stats');
-        if (!r.ok) throw new Error('请求失败');
-        const data = await r.json();
-        render(data);
-    } catch(e) {
-        console.error(e);
-    }
+    const r = await fetch('/api/stats');
+    if (!r.ok) throw new Error('加载失败');
+    statsData = await r.json();
+    render(statsData);
+    return statsData;
 }
 
 function render(data) {
     // KPIs
-    document.getElementById('kpi-total').textContent = data.total;
-    document.getElementById('current-code-display').textContent = data.current_code;
-
-    const todayCount = data.hourly.reduce((s, h) => s + h.count, 0);
+    document.getElementById('kpi-total').textContent = data.total || 0;
+    const todayCount = (data.hourly || []).reduce((s, h) => s + h.count, 0);
     document.getElementById('kpi-today').textContent = todayCount;
-
     if (data.top_main_dim) {
         document.getElementById('kpi-topdim').textContent = DIM_LABELS[data.top_main_dim] || data.top_main_dim;
         document.getElementById('kpi-topdim-sub').textContent = '最常见裂隙';
     }
+    if (data.avg_health !== undefined && data.avg_health > 0) {
+        document.getElementById('kpi-health').textContent = data.avg_health;
+    }
 
     // Hourly chart
     const chart = document.getElementById('hourly-chart');
-    const maxCnt = Math.max(...data.hourly.map(h => h.count), 1);
-    chart.innerHTML = data.hourly.map(h => {
-        const pct = h.count > 0 ? Math.max(10, (h.count / maxCnt) * 100) : 0;
+    const hourly = data.hourly || [];
+    const maxCnt = Math.max(...hourly.map(h => h.count), 1);
+    chart.innerHTML = hourly.map(h => {
+        const pct = h.count > 0 ? Math.max(8, (h.count / maxCnt) * 100) : 0;
         return `<div class="bar-col">
             <div class="bar-num">${h.count || ''}</div>
             <div class="bar" style="height:${pct}%"></div>
@@ -219,77 +337,80 @@ function render(data) {
     const dimList = document.getElementById('dim-list');
     const dimAvg = data.dim_avg || {};
     const dimMax = {criticism:14, indifference:14, defensive:12, taking:12, narcissism:12, forgetful:10};
-    dimList.innerHTML = Object.keys(dimAvg).map(d => {
+    const entries = Object.keys(dimAvg).filter(d => DIM_LABELS[d]);
+    dimList.innerHTML = entries.length ? entries.map(d => {
         const avg = dimAvg[d] || 0;
         const max = dimMax[d] || 14;
         const pct = (avg / max * 100).toFixed(0);
         const color = DIM_COLORS[d] || '#888';
         return `<div class="dim-row">
-            <div class="dim-label">${DIM_LABELS[d] || d}</div>
+            <div class="dim-label">${DIM_LABELS[d]}</div>
             <div class="dim-bar-wrap">
                 <div class="dim-bar-fill" style="width:${pct}%;background:${color}"></div>
             </div>
             <div class="dim-score" style="color:${color}">${avg}</div>
         </div>`;
-    }).join('');
+    }).join('') : '<div class="empty">暂无数据</div>';
 
     // Recent table
     const tbody = document.getElementById('recent-tbody');
-    if (!data.recent || data.recent.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="empty">暂无数据</td></tr>';
-        return;
+    const recent = data.recent || [];
+    if (!recent.length) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty">暂无测试记录</td></tr>';
+    } else {
+        tbody.innerHTML = recent.map(r => {
+            const health = r.health_score || 0;
+            const badgeCls = health >= 70 ? 'badge-low' : health >= 50 ? 'badge-mid' : 'badge-high';
+            return `<tr>
+                <td style="color:#bbb;font-size:12px">#${r.id}</td>
+                <td style="color:#666;font-size:12px">${r.submitted_at || '-'}</td>
+                <td><span class="badge badge-high">${r.main_dim_label}</span></td>
+                <td><span class="badge ${badgeCls}">${health}</span></td>
+                <td style="color:#bbb;font-size:11px">${r.ip || '-'}</td>
+            </tr>`;
+        }).join('');
     }
-    tbody.innerHTML = data.recent.map(r => {
-        const health = r.health_score || 0;
-        const badgeCls = health >= 70 ? 'badge-low' : health >= 50 ? 'badge-mid' : 'badge-high';
-        return `<tr>
-            <td style="color:#555">#${r.id}</td>
-            <td>${r.submitted_at || '-'}</td>
-            <td><span class="badge badge-high">${r.main_dim_label}</span></td>
-            <td>${r.main_score ?? '-'}</td>
-            <td><span class="badge ${badgeCls}">${health}</span></td>
-            <td style="color:#444;font-size:11px">${r.ip || '-'}</td>
-        </tr>`;
-    }).join('');
+
+    // Current code
+    document.getElementById('current-code-display').textContent = data.current_code || '--';
 }
 
+// ── Change Code ────────────────────────────────
 async function changeCode() {
     const pwd = document.getElementById('admin-pwd').value;
-    const newCode = document.getElementById('new-code').value;
+    const newCode = document.getElementById('new-code').value.trim();
     const msg = document.getElementById('code-msg');
-    msg.className = 'msg';
-    msg.style.display = 'none';
+    msg.className = 'msg'; msg.style.display = 'none';
 
     if (!newCode || newCode.length < 3) {
         msg.textContent = '通行码至少3个字符';
-        msg.className = 'msg err';
+        msg.className = 'msg err'; msg.style.display = 'block';
         return;
     }
 
-    try {
-        const r = await fetch('/api/change_code', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({admin_password: pwd, new_code: newCode})
-        });
-        const data = await r.json();
-        if (data.success) {
-            msg.textContent = data.message;
-            msg.className = 'msg ok';
-            document.getElementById('current-code-display').textContent = newCode;
-            document.getElementById('admin-pwd').value = '';
-            document.getElementById('new-code').value = '';
-        } else {
-            msg.textContent = data.message || '修改失败';
-            msg.className = 'msg err';
-        }
-    } catch(e) {
-        msg.textContent = '请求失败';
-        msg.className = 'msg err';
+    const r = await fetch('/api/change_code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ admin_password: pwd, new_code: newCode })
+    });
+    const data = await r.json();
+    if (data.success) {
+        msg.textContent = data.message;
+        msg.className = 'msg ok'; msg.style.display = 'block';
+        document.getElementById('current-code-display').textContent = newCode;
+        document.getElementById('admin-pwd').value = '';
+        document.getElementById('new-code').value = '';
+        adminPwd = newCode; // update stored pwd
+        // refresh to reflect new code
+        loadStats();
+    } else {
+        msg.textContent = data.message || '修改失败';
+        msg.className = 'msg err'; msg.style.display = 'block';
     }
 }
 
-loadStats();
+// Auto-focus login
+document.getElementById('login-pwd').focus();
 </script>
 </body>
 </html>

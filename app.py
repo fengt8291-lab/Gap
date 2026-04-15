@@ -17,7 +17,7 @@ app = Flask(__name__,
 app.secret_key = os.environ.get('SECRET_KEY', 'gap-secret-key-2026')
 
 ACCESS_CODE = os.environ.get('ACCESS_CODE', 'gap')
-ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'gapadmin')
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'Typhoon@2026')
 DB_PATH = os.path.join(BASE_DIR, 'gap.db')
 
 BJ_TZ = timezone(timedelta(hours=8))
@@ -273,6 +273,14 @@ def api_stats():
         'avg_health': avg_health,
         'main_dim_counts': dict(main_dim_counts),
     })
+
+@app.route('/api/admin/verify', methods=['POST'])
+def api_admin_verify():
+    data = request.get_json() or {}
+    pwd = data.get('admin_password', '')
+    if pwd == ADMIN_PASSWORD:
+        return jsonify({'valid': True})
+    return jsonify({'valid': False}), 401
 
 @app.route('/api/change_code', methods=['POST'])
 def api_change_code():
